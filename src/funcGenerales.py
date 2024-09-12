@@ -5,27 +5,29 @@ import streamlit as st
 
 def getInputsGenerales():
     st.write('Edite los parámetros generales del circuito magnético:')
-    col1, col2 = st.columns(2)
 
+    minNoCero = 0.0000000000000001
+
+    col1, col2 = st.columns(2)
     with col1:
         vueltas1 = st.number_input("Número de vueltas de bobina 1",
                                    min_value=1, step=1)
         vueltas2 = st.number_input("Número de vueltas de bobina 2",
                                    min_value=1, step=1)
-        SL = st.number_input("Área transversal SL (m)", min_value=0.0,
-                             format="%.3f")
-        SC = st.number_input("Área transversal SC (m)", min_value=0.0,
-                             format="%.3f")
+        SL = st.number_input("Área transversal SL (m)", min_value=minNoCero,
+                             value=1.00, format="%.3f")
+        SC = st.number_input("Área transversal SC (m)", min_value=minNoCero,
+                             value=1.00, format="%.3f")
 
     with col2:
-        A = st.number_input("Alto del circuito A (m)", min_value=0.0,
-                            format="%.3f")
-        L1 = st.number_input("Longitud L1 (m)", min_value=0.0,
-                             format="%.3f")
-        L2 = st.number_input("Longitud L2 (m)", min_value=0.0,
-                             format="%.3f")
+        A = st.number_input("Alto del circuito A (m)", min_value=minNoCero,
+                            value=1.00, format="%.3f")
+        L1 = st.number_input("Longitud L1 (m)", min_value=minNoCero,
+                             value=1.00, format="%.3f")
+        L2 = st.number_input("Longitud L2 (m)", min_value=minNoCero,
+                             value=1.00, format="%.3f")
         L3 = st.number_input("Altura media del entrehierro L3 (m)",
-                             min_value=0.0, format="%.3f")
+                             value=1.00, min_value=0.0, format="%.3f")
 
     stringFP = "Factor de apilado de las láminas del núcleo"
     factorApilado = st.number_input(stringFP,
@@ -58,7 +60,7 @@ def inputVector(nombreVariable, unidades):
 
     # Create columns to place widgets side-by-side
     # Adjust the ratio to control the width of columns
-    col1, col2 = st.columns([3, 1])
+    col1, col2 = st.columns([2, 1])
 
     with col1:
         # Create a number input field
