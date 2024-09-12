@@ -1,4 +1,7 @@
+# Archivo para iniciar el programa.
+
 import subprocess
+import streamlit as st
 
 # Path to your Streamlit app
 app_path = 'src/src.py'

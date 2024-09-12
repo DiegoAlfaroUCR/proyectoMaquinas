@@ -1,12 +1,28 @@
 import streamlit as st
 from PIL import Image
+from funcGenerales import getInputsGenerales, inputVector
 
 
-st.title('Calculadora de circuitos magnéticos.')
-st.subheader("Diego Alfaro Segura (C20259), Ismael José Alvarado Pérez (C20366). Grupo 1")
+# Header
 
+st.title(':blue[Calculadora de circuitos magnéticos] ')
+st.subheader("Diego Alfaro Segura (C20259)," +
+             " Ismael José Alvarado Pérez (C20366). Grupo 1")
 
-st.write('Main de prueba.')
+imagen_local = Image.open('img/imagen.png')
+st.image(imagen_local, caption='Diagrama del circuito magnético',
+         use_column_width=True)
 
-image_local = Image.open('img/imagen.png')  # Replace with your image path
-st.image(image_local, caption='Local Image', use_column_width=True)
+# Inputs generales.
+parametrosGenerales = getInputsGenerales()
+
+# Ingreso de opciones e inputs específicos.
+listaVariables = ['Flujos magnéticos 1 y 2', 'Corriente 1', 'Corriente 2']
+variableBuscada = st.selectbox('Escoja la variable a calcular', listaVariables)
+
+if variableBuscada == 'Flujos magnéticos 1 y 2':
+    flujoEntrehierro = inputVector('Flujo de entrehierro', 'weber')
+elif variableBuscada == 'Corriente 1':
+    corriente2 = inputVector('Corriente 2', 'A')
+else:
+    corriente1 = inputVector('Corriente 1', 'A')
