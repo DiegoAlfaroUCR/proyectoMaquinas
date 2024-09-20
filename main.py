@@ -1,5 +1,7 @@
 # Archivo para iniciar el programa.
 
+# Diego Alfaro Segura (C20259), Ismael José Alvarado Pérez (C20366). Grupo 1
+
 import subprocess
 import importlib.util
 

@@ -19,5 +19,6 @@ parametrosGenerales = getInputsGenerales()
 # Inputs específicos.
 parametrosEspecificos = getInputsEspecificos()
 
-st.write(parametrosGenerales)
-st.write(parametrosEspecificos)
+if parametrosGenerales['datosMu'][1] != 'error':
+    st.write(parametrosGenerales)
+    st.write(parametrosEspecificos)
