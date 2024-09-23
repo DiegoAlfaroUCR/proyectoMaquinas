@@ -124,24 +124,23 @@ def tablaMu():
     if num_rows != len(st.session_state.df):
         # Add or remove rows while keeping the data intact
         if num_rows > len(st.session_state.df):
-            # Create new rows but remove all-NA columns
-            # to avoid the FutureWarning
             additional_rows = pd.DataFrame(
                 index=range(len(st.session_state.df), num_rows),
-                columns=st.session_state.df.columns)
-            additional_rows = additional_rows.dropna(how='all', axis=1)
-            # Exclude all-NA columns
+                columns=st.session_state.df.columns
+            ).dropna(how='all', axis=1)
             st.session_state.df = pd.concat(
-                [st.session_state.df, additional_rows], ignore_index=True)
+                [st.session_state.df, additional_rows], ignore_index=True
+            )
         else:
-            # Remove excess rows
             st.session_state.df = st.session_state.df.iloc[:num_rows]
 
     # Display editable table
     edited_df = st.data_editor(st.session_state.df, use_container_width=True)
 
-    # Update session state with the edited DataFrame
-    st.session_state.df = edited_df
+    # Add a submit button to control when changes are applied
+    if st.button("Subir datos de la tabla"):
+        # Update session state with the edited DataFrame
+        st.session_state.df = edited_df
 
     # Error checking for NaN and negative values
     if st.session_state.df.isnull().values.any():
@@ -169,3 +168,10 @@ def ecuacionMu():
                             value=1.00)
     dictMu = {'a': a, 'b': b}
     return [dictMu, 'ecuacion']
+
+
+def mostrarResultado():
+    # De momento no tenemos el formato del resultado.
+    st.header("Resultado del cálculo")
+    result = 21.6666
+    st.metric("Corriente pedida (A)", result)
