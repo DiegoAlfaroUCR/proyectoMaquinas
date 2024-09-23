@@ -233,3 +233,11 @@ def sacarH(flujoE,factorApilado,SC, tipo,a=1,b=1):
 
 
     return H3
+
+
+def mostrarResultado():
+    # De momento no tenemos el formato del resultado.
+    st.header("Resultado del cálculo")
+    result = 21.6666
+    st.metric("Corriente pedida (A)", result)
+
