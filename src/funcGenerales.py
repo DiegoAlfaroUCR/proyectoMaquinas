@@ -2,6 +2,7 @@
 
 import streamlit as st
 import pandas as pd
+import numpy as np
 
 minNoCero = 0.0000000000000001
 
@@ -27,7 +28,8 @@ def getInputsGenerales():
                              value=1.00, format="%.5f")
         L2 = st.number_input("Longitud L2 (m)", min_value=minNoCero,
                              value=1.00, format="%.5f")
-        L3 = st.number_input("Altura media del entrehierro L3 (m)",
+        #cambie el nombre de L3 al LE, que lo otro es sólo la altura a la que empieza el entre hierro
+        LE = st.number_input("Altura media del entrehierro LE (m)",
                              value=1.00, min_value=0.0, format="%.5f")
 
     stringFP = "Factor de apilado de las láminas del núcleo"
@@ -43,7 +45,19 @@ def getInputsGenerales():
         datosMu = tablaMu()
     else:
         datosMu = ecuacionMu()
-
+    #Datos del flujo en el entrehierro
+    st.write(f'Ingrese los datos de flujo en el entrehierro deseado')
+    col1, col2 = st.columns(2)
+    with col1:
+        flujoEntreHierro = st.number_input("Flujo [Wb]",
+                                   min_value=0.0, format="%.5f")
+    with col2:
+        # Create a select box for choosing units
+        sentidoW = st.selectbox(
+            "Sentido",
+            {'Hacia arriba': 1, 'Hacia abajo': -1},
+            index=0  # Optionally, set the default selection
+            )
     parametrosGenerales = {
         'vueltas1': vueltas1,
         'vueltas2': vueltas2,
@@ -53,31 +67,29 @@ def getInputsGenerales():
         'A': A,
         'L1': L1,
         'L2': L2,
-        'L3': L3,
-        'datosMu': datosMu
+        'LE': LE,
+        'datosMu': datosMu,
+        'flujoEntreHierro' : flujoEntreHierro,
+        'sentidoEntreHierro': sentidoW
     }
 
     return parametrosGenerales
 
 
 def getInputsEspecificos():
-    listaVariables = ['Flujos magnéticos 1 y 2', 'Corriente 1', 'Corriente 2']
+    listaVariables = ['Corriente 1', 'Corriente 2']
     variableBuscada = st.selectbox('Escoja la variable a calcular',
                                    listaVariables)
 
-    if variableBuscada == 'Flujos magnéticos 1 y 2':
-        [nombreVariable, unidades] = ['Flujo de entrehierro', 'weber']
-    elif variableBuscada == 'Corriente 1':
+    if variableBuscada == 'Corriente 1':
         [nombreVariable, unidades] = ['Corriente 2', 'A']
     else:
         [nombreVariable, unidades] = ['Corriente 1', 'A']
 
     st.write(f'Ingrese los datos de {nombreVariable}')
-
-    if nombreVariable == 'Flujo de entrehierro':
-        opcionesSentido = {'Hacia arriba': 1, 'Hacia abajo': -1}
-    else:
-        opcionesSentido = {'Hacia la derecha': 1, 'Hacia la izquierda': -1}
+    
+    
+    opcionesSentido = {'Hacia la derecha': 1, 'Hacia la izquierda': -1}
 
     # Create columns to place widgets side-by-side
     # Adjust the ratio to control the width of columns
@@ -95,12 +107,16 @@ def getInputsEspecificos():
             list(opcionesSentido.keys()),
             index=0  # Optionally, set the default selection
         )
+    
+    
+
 
     parametrosEspecificos = {
         'variableBuscada': variableBuscada,
         'variableDada': nombreVariable,
         'magnitud': magnitud,
-        'sentido': opcionesSentido[sentido]}
+        'sentido': opcionesSentido[sentido]
+        }
     return parametrosEspecificos
 
 
@@ -154,6 +170,7 @@ def tablaMu():
                  "Por favor, use solo valores positivos.")
         return [st.session_state.df, 'error']
 
+
     return [st.session_state.df, 'dataFrame']
 
 
@@ -169,3 +186,50 @@ def ecuacionMu():
                             value=1.00)
     dictMu = {'a': a, 'b': b}
     return [dictMu, 'ecuacion']
+
+def calculadora():
+    #se tiene la matriz principal
+    # se debe hallar la fmm del medio
+    # entrehierro+ nucleo
+    #por el momento nada tiene valor real
+
+    tipo=1
+    a=1
+    b=1
+
+    flujoE=1
+    LE=1
+    mu=4*np.pi*10^(-7)
+    SC=1
+    A=1
+    factorApilado=1
+    I1=None
+    I2=None
+
+    H3=sacarH(flujoE,factorApilado,SC, tipo,a,b)
+    
+    Fmmc= flujoE*LE/(mu*SC)+ H3*A
+    if I1 is not None:
+
+        pass
+    else:
+        pass
+    
+    
+
+
+    pass
+def sacarH(flujoE,factorApilado,SC, tipo,a=1,b=1):
+    #Saco B3
+    B3=flujoE/(factorApilado*SC)
+    if tipo=='ecuacion':
+        if (a-b*B3)==0:
+            H3=1
+        else:
+            H3= B3/(a-b*B3)
+    else:
+        #Hacer lo de interpolación acá
+        pass
+
+
+    return H3
