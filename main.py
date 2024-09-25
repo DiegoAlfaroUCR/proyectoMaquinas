@@ -3,8 +3,16 @@ import importlib.util
 import threading
 import time
 
-lib_spec = importlib.util.find_spec('streamlit')
-if lib_spec is not None:
+# Se busca si se tienen todos los paquetes
+
+faltanPaquetes = False
+listaPaquetes = ['streamlit', 'keyboard', 'PIL']
+
+for paquete in listaPaquetes:
+    if importlib.util.find_spec(paquete) is None:
+        faltanPaquetes = True
+
+if not faltanPaquetes:
     # Path to your Streamlit app
     app_path = 'src/Interfaz.py'
 
@@ -41,6 +49,8 @@ if lib_spec is not None:
             print("Finalizando el proceso de streamlit...")
             process.kill()
 else:
-    print('No tiene la librería streamlit instalada. ' +
-          'Para usar el programa, debe instalarla con el comando:\n' +
-          'pip install streamlit')
+    print('\nNo tiene las librerías requeridas instaladas. ' +
+          'Para usar el programa, debe instalarlas con el comando:\n' +
+          'pip install streamlit keyboard Pillow', end='')
+
+    # print(*listaPaquetes, end='\n\n')
