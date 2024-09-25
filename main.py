@@ -19,7 +19,7 @@ if lib_spec is not None:
         while True:
             retcode = process.poll()  # Check if the process has terminated
             if retcode is not None:
-                print("Streamlit app closed.")
+                print("Calculadora cerrada correctamente.")
                 break
             time.sleep(1)  # Wait a bit before checking again
 
