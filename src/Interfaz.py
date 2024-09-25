@@ -2,7 +2,8 @@ import streamlit as st
 from PIL import Image
 from funcGenerales import (getInputsGenerales,
                            getInputsEspecificos,
-                           mostrarResultado)
+                           mostrarResultado,
+                           calculadora)
 
 st.cache_data.clear()
 st.cache_resource.clear()
@@ -20,10 +21,12 @@ st.image(imagen_local, caption='Diagrama del circuito magnético',
 # Inputs generales.
 parametrosGenerales = getInputsGenerales()
 
+
 # Inputs específicos.
 parametrosEspecificos = getInputsEspecificos()
-
+#botón de calcular
+resultados=calculadora(parametrosGenerales,parametrosEspecificos)
 if parametrosGenerales['datosMu'][1] != 'error':
-    mostrarResultado()
+    
     st.write(parametrosGenerales)
     st.write(parametrosEspecificos)
