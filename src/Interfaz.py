@@ -36,9 +36,14 @@ else:
 
     # Inputs específicos.
     parametrosEspecificos = getInputsEspecificos()
+
     # Botón de calcular
     resultados = calculadora(parametrosGenerales, parametrosEspecificos)
     if parametrosGenerales['datosMu'][1] != 'error':
         # mostrarResultado(parametrosEspecificos)
         st.write(parametrosGenerales)
         st.write(parametrosEspecificos)
+        if st.button('Calcular'):
+            resultados = calculadora(parametrosGenerales,
+                                     parametrosEspecificos)
+            mostrarResultado(resultados, parametrosEspecificos)

@@ -229,56 +229,57 @@ def calculadora(generales, especificos):
     Iconocida = especificos['variableDada']
     magnitud = especificos['magnitud']
     sentido = especificos['sentido']
-    if st.button("Calcular"):
-        H3 = sacarH(flujoEntreHierro, SC, datosMu, factorApilado)
-        # Sacar datos del centro
-        Fmmcentro = flujoEntreHierro*LE/(mu*AreaEntrehierro) + H3*(A-LE)
-        # x = flujoEntreHierro*LE/(mu*AreaEntrehierro)
-        # print(x)
-        # print(AreaEntrehierro)
-        # print(mu)
-        # print('Fmm')
-        # print(Fmmcentro)
-        # print(H3*(A-LE))
-        # Identificar los datos conocidos
-        corrienteConocida = magnitud
-        if sentido == 'Hacia la izquierda':
-            corrienteConocida = -magnitud
-        if Iconocida == 'Corriente 1':
-            Idesconocida = 'Corriente 2'
-            Lconocido = A+2*L1
-            Nconocido = vueltas1
-            Ldesconocido = A+2*L2
-            Ndesconocido = vueltas2
 
-        else:
-            Idesconocida = 'Corriente 1'
-            Lconocido = A+2*L2
-            Nconocido = vueltas2
-            Ldesconocido = A+2*L1
-            Ndesconocido = vueltas1
+    H3 = sacarH(flujoEntreHierro, SC, datosMu, factorApilado)
+    # Sacar datos del centro
+    Fmmcentro = flujoEntreHierro*LE/(mu*AreaEntrehierro) + H3*(A-LE)
+    # x = flujoEntreHierro*LE/(mu*AreaEntrehierro)
+    # print(x)
+    # print(AreaEntrehierro)
+    # print(mu)
+    # print('Fmm')
+    # print(Fmmcentro)
+    # print(H3*(A-LE))
+    # Identificar los datos conocidos
+    corrienteConocida = magnitud
+    if sentido == 'Hacia la izquierda':
+        corrienteConocida = -magnitud
 
-        # Sacar datos de la bobina con I conocido
-        Hconocido = (Nconocido*corrienteConocida-Fmmcentro)/(Lconocido)
-        # print('H1')
-        # print(Hconocido)
-        flujoconocido = sacarFlujo(Hconocido, SL, datosMu, factorApilado)
+    if Iconocida == 'Corriente 1':
+        Idesconocida = 'Corriente 2'
+        Lconocido = A+2*L1
+        Nconocido = vueltas1
+        Ldesconocido = A+2*L2
+        Ndesconocido = vueltas2
 
-        # Sacar datos de la bobina con I desconocida
-        flujoDesconocido = flujoEntreHierro-flujoconocido
-        Hdesconocido = sacarH(flujoDesconocido, SL, datosMu, factorApilado)
-        corrienteDesconocida = ((Fmmcentro+Hdesconocido*Ldesconocido)
-                                / Ndesconocido)
-        # print('Corriente calculada')
-        # print(corrienteDesconocida)
-        # print('flujo de bobina calculada')
-        # print(flujoDesconocido)
-        # print('flujo de bobina conocida')
-        # print(flujoconocido)
-        diccResultados = {Iconocida: flujoconocido,
-                          Idesconocida: [corrienteDesconocida,
-                                         flujoDesconocido]}
-        return diccResultados
+    else:
+        Idesconocida = 'Corriente 1'
+        Lconocido = A+2*L2
+        Nconocido = vueltas2
+        Ldesconocido = A+2*L1
+        Ndesconocido = vueltas1
+
+    # Sacar datos de la bobina con I conocido
+    Hconocido = (Nconocido*corrienteConocida-Fmmcentro)/(Lconocido)
+    # print('H1')
+    # print(Hconocido)
+    flujoconocido = sacarFlujo(Hconocido, SL, datosMu, factorApilado)
+
+    # Sacar datos de la bobina con I desconocida
+    flujoDesconocido = flujoEntreHierro-flujoconocido
+    Hdesconocido = sacarH(flujoDesconocido, SL, datosMu, factorApilado)
+    corrienteDesconocida = ((Fmmcentro+Hdesconocido*Ldesconocido)
+                            / Ndesconocido)
+    # print('Corriente calculada')
+    # print(corrienteDesconocida)
+    # print('flujo de bobina calculada')
+    # print(flujoDesconocido)
+    # print('flujo de bobina conocida')
+    # print(flujoconocido)
+    diccResultados = {Iconocida: flujoconocido,
+                      Idesconocida: [corrienteDesconocida,
+                                     flujoDesconocido]}
+    return diccResultados
 
 
 def sacarH(flujoE, SC, datosMu, factorApilado=1):
@@ -302,8 +303,8 @@ def sacarH(flujoE, SC, datosMu, factorApilado=1):
         b_array = datos['B (T)'].to_numpy()
         h_array = datos['H (Av/m)'].to_numpy()
         b_array, h_array = bubble_sort(b_array, h_array)
-        print(h_array)
-        print(b_array)
+        # print(h_array)
+        # print(b_array)
         if B < b_array[0]:
             menorB = b_array[0]
             menorH = h_array[0]
@@ -325,31 +326,42 @@ def sacarH(flujoE, SC, datosMu, factorApilado=1):
                     mayorH = h_array[i]
                     break
         H = menorH + (B - menorB) * (mayorH - menorH) / (mayorB - menorB)
-        print(menorB)
-        print(mayorB)
-    print(B)
-    print(H)
+        # print(menorB)
+        # print(mayorB)
+    # print(B)
+    # print(H)
     return H
 
 
 def mostrarResultado(diccResultados, parametrosEspecificos):
-    # De momento no tenemos el formato del resultado.
     st.header("Resultados del cálculo")
-    corrienteResult = parametrosEspecificos['variableBuscada']
-    if parametrosEspecificos['sentido'] == -1:
+
+    corrienteBuscada = parametrosEspecificos['variableBuscada']
+
+    # Mensaje para flujo por bobinas
+    if corrienteBuscada == 'Corriente 1':
+        flujo1 = diccResultados['Corriente 1'][1]
+        flujo2 = diccResultados['Corriente 2']
+    else:
+        flujo1 = diccResultados['Corriente 1']
+        flujo2 = diccResultados['Corriente 2'][1]
+
+    st.metric('Flujo por Bobina 1', str(flujo1) + ' Wb')
+    st.metric('Flujo por Bobina 2', str(flujo2) + ' Wb')
+
+    # Mensaje para corriente buscada
+    magnitudCorrienteBuscada = diccResultados[corrienteBuscada][0]
+
+    if magnitudCorrienteBuscada < 0:
         sentido = 'Hacia la izquierda'
     else:
         sentido = 'Hacia la derecha'
 
-    mensajeResultado = str(corrienteResult) + sentido
+    mensajeCorrienteBuscada = (corrienteBuscada + ' : ' +
+                               str(abs(round(magnitudCorrienteBuscada, 3))) +
+                               ' A, ' + sentido)
 
-    """
-    if resultados[peticion] < 0:
-        corrienteResult = str(abs(float(resultados[peticion])))+' Hacia la izquierda'
-    else:
-        corrienteResult = str(abs(float(resultados[peticion])))+' Hacia la derecha'
-    """
-    st.metric("Corriente pedida (A)", mensajeResultado)
+    st.metric("Corriente buscada", mensajeCorrienteBuscada)
 
 
 def bubble_sort(arr, otro):
@@ -387,8 +399,8 @@ def sacarFlujo(H, SL, datosMu, factorApilado=1):
         b_array = datos['B (T)'].to_numpy()
         h_array = datos['H (Av/m)'].to_numpy()
         b_array, h_array = bubble_sort(b_array, h_array)
-        print(h_array)
-        print(b_array)
+        # print(h_array)
+        # print(b_array)
         for i in range(len(b_array)):
             if h_array[i] < abs(H):
                 menorB = b_array[i]
@@ -399,10 +411,10 @@ def sacarFlujo(H, SL, datosMu, factorApilado=1):
                 mayorH = h_array[i]
                 break
         B = menorB + (H - menorH) * (mayorB - menorB) / (mayorH - menorH)
-    print(B)
-    print(H)
+    # print(B)
+    # print(H)
     # Lo estaba dividiendo por error
     flujo = B*(SL*factorApilado)
-    print('flujo')
-    print(flujo)
+    # print('flujo')
+    # print(flujo)
     return flujo
