@@ -28,23 +28,30 @@ def getInputsGenerales():
                              value=1.00, format="%.5f")
         L2 = st.number_input("Longitud L2 (m)", min_value=minNoCero,
                              value=1.00, format="%.5f")
-        #cambie el nombre de L3 al LE, que lo otro es sólo la altura a la que empieza el entre hierro
+        # Cambie el nombre de L3 al LE,
+        # que lo otro es sólo la altura a la que empieza el entre hierro
         LE = st.number_input("Altura media del entrehierro LE (m)",
                              value=1.00, min_value=0.0, format="%.5f")
 
     stringFP = "Factor de apilado de las láminas del núcleo"
-    factorApilado = st.number_input(stringFP,value=1.00,
+    factorApilado = st.number_input(stringFP, value=1.00,
                                     min_value=minNoCero,
                                     max_value=1.0,
                                     format="%.5f")
-    seleccionPorcentaje=st.selectbox('Indique porcentaje de deformación del área en el entrehierro (%)',
-                                   ['Automático', 'Porcentaje'])
-    if seleccionPorcentaje=='Porcentaje':
-        porcentajeArea=st.number_input('Coloque el dato como un porcentaje',value=50.00,
-                                    min_value=0.0,
-                                    max_value=100.0,format="%.5f")
+
+    seleccionPorcentaje = st.selectbox('Indique porcentaje de deformación' +
+                                       'del área en el entrehierro (%)',
+                                       ['Automático', 'Porcentaje'])
+
+    if seleccionPorcentaje == 'Porcentaje':
+        porcentajeArea = st.number_input('Coloque el dato como un porcentaje',
+                                         value=50.00,
+                                         min_value=0.0,
+                                         max_value=100.0,
+                                         format="%.5f")
     else:
-        porcentajeArea='automatico'
+        porcentajeArea = 'automatico'
+
     seleccionMu = st.selectbox('Escoja una forma de ingresar Mu',
                                ['Por tabla', 'Por ecuación'])
 
@@ -52,12 +59,12 @@ def getInputsGenerales():
         datosMu = tablaMu()
     else:
         datosMu = ecuacionMu()
-    #Datos del flujo en el entrehierro
-    st.write(f'Ingrese los datos de flujo en el entrehierro deseado')
+    # Datos del flujo en el entrehierro
+    st.write('Ingrese los datos de flujo en el entrehierro deseado')
     col1, col2 = st.columns(2)
     with col1:
         flujoEntreHierro = st.number_input("Flujo [Wb]",
-                                   min_value=0.0, format="%.5f")
+                                           min_value=0.0, format="%.5f")
     with col2:
         # Create a select box for choosing units
         sentidoW = st.selectbox(
@@ -76,9 +83,9 @@ def getInputsGenerales():
         'L2': L2,
         'LE': LE,
         'datosMu': datosMu,
-        'flujoEntreHierro' : flujoEntreHierro,
+        'flujoEntreHierro': flujoEntreHierro,
         'sentidoEntreHierro': sentidoW,
-        'porcentajeArea':porcentajeArea
+        'porcentajeArea': porcentajeArea
     }
 
     return parametrosGenerales
@@ -95,8 +102,7 @@ def getInputsEspecificos():
         [nombreVariable, unidades] = ['Corriente 1', 'A']
 
     st.write(f'Ingrese los datos de {nombreVariable}')
-    
-    
+
     opcionesSentido = {'Hacia la derecha': 1, 'Hacia la izquierda': -1}
 
     # Create columns to place widgets side-by-side
@@ -115,9 +121,6 @@ def getInputsEspecificos():
             list(opcionesSentido.keys()),
             index=0  # Optionally, set the default selection
         )
-    
-    
-
 
     parametrosEspecificos = {
         'variableBuscada': variableBuscada,
@@ -178,7 +181,6 @@ def tablaMu():
                  "Por favor, use solo valores positivos.")
         return [st.session_state.df, 'error']
 
-
     return [st.session_state.df, 'dataFrame']
 
 
@@ -195,164 +197,162 @@ def ecuacionMu():
     dictMu = {'a': a, 'b': b}
     return [dictMu, 'ecuacion']
 
+
 def calculadora(generales, especificos):
-    #se tiene la matriz principal
-    # se debe hallar la fmm del medio
-    # entrehierro+ nucleo
-    #por el momento nada tiene valor real
-   #valores de generales
-    mu=4*np.pi/(10**(7))
-    vueltas1=float(generales['vueltas1'])
-    vueltas2=float(generales['vueltas2'])
-    factorApilado=float(generales['factorApilado'])
-    if factorApilado==0:
-        factorApilado=1
-    SL=float(generales['SL'])
-    SC=float(generales['SC'])
+    # Se tiene la matriz principal, se debe hallar la fmm del medio
+    # entrehierro + nucleo. Por el momento nada tiene valor real
+
+    # Valores de generales
+    mu = 4*np.pi/(10**(7))
+    vueltas1 = float(generales['vueltas1'])
+    vueltas2 = float(generales['vueltas2'])
+    factorApilado = float(generales['factorApilado'])
+    if factorApilado == 0:
+        factorApilado = 1
+    SL = float(generales['SL'])
+    SC = float(generales['SC'])
     A = float(generales['A'])
     L1 = float(generales['L1'])
     L2 = float(generales['L2'])
     LE = float(generales['LE'])
     datosMu = generales['datosMu']
     flujoEntreHierro = float(generales['flujoEntreHierro'])
-    sentidoW=generales['sentidoEntreHierro']
-    porcentajeArea=generales['porcentajeArea']
-    if porcentajeArea=='automatico':
-        AreaEntrehierro=(np.sqrt(SC)+LE)**2
+    # sentidoW = generales['sentidoEntreHierro']
+    porcentajeArea = generales['porcentajeArea']
+    if porcentajeArea == 'automatico':
+        AreaEntrehierro = (np.sqrt(SC)+LE)**2
     else:
-        AreaEntrehierro=SC*(1+float(porcentajeArea)/100)
-        
+        AreaEntrehierro = SC*(1+float(porcentajeArea)/100)
+
     """No he puesto como afecta la dirección"""
-    #valores especificos
-    Iconocida=especificos['variableDada']
-    magnitud=especificos['magnitud']
-    sentido=especificos['sentido']
+    # Valores especificos
+    Iconocida = especificos['variableDada']
+    magnitud = especificos['magnitud']
+    sentido = especificos['sentido']
     if st.button("Calcular"):
-        H3=sacarH(flujoEntreHierro,SC,datosMu, factorApilado)
-        #Sacar datos del centro
-        Fmmcentro= flujoEntreHierro*LE/(mu*AreaEntrehierro)+ H3*(A-LE)
-        x=flujoEntreHierro*LE/(mu*AreaEntrehierro)
-        print(x)
-        print(AreaEntrehierro)
-        print(mu)
-        print('Fmm')
-        print(Fmmcentro)
-        print(H3*(A-LE))
-        #Identificar los datos conocidos
-        corrienteConocida=magnitud
-        if sentido=='Hacia la izquierda':
-                corrienteConocida=-magnitud
-        if Iconocida=='Corriente 1':
-            Idesconocida='Corriente 2'
-            Lconocido=A+2*L1
-            Nconocido= vueltas1
-            Ldesconocido=A+2*L2
-            Ndesconocido= vueltas2 
-            
+        H3 = sacarH(flujoEntreHierro, SC, datosMu, factorApilado)
+        # Sacar datos del centro
+        Fmmcentro = flujoEntreHierro*LE/(mu*AreaEntrehierro) + H3*(A-LE)
+        # x = flujoEntreHierro*LE/(mu*AreaEntrehierro)
+        # print(x)
+        # print(AreaEntrehierro)
+        # print(mu)
+        # print('Fmm')
+        # print(Fmmcentro)
+        # print(H3*(A-LE))
+        # Identificar los datos conocidos
+        corrienteConocida = magnitud
+        if sentido == 'Hacia la izquierda':
+            corrienteConocida = -magnitud
+        if Iconocida == 'Corriente 1':
+            Idesconocida = 'Corriente 2'
+            Lconocido = A+2*L1
+            Nconocido = vueltas1
+            Ldesconocido = A+2*L2
+            Ndesconocido = vueltas2
+
         else:
-            Idesconocida='Corriente 1'
-            Lconocido=A+2*L2
-            Nconocido= vueltas2  
-            Ldesconocido=A+2*L1
-            Ndesconocido= vueltas1   
+            Idesconocida = 'Corriente 1'
+            Lconocido = A+2*L2
+            Nconocido = vueltas2
+            Ldesconocido = A+2*L1
+            Ndesconocido = vueltas1
+
+        # Sacar datos de la bobina con I conocido
+        Hconocido = (Nconocido*corrienteConocida-Fmmcentro)/(Lconocido)
+        # print('H1')
+        # print(Hconocido)
+        flujoconocido = sacarFlujo(Hconocido, SL, datosMu, factorApilado)
+
+        # Sacar datos de la bobina con I desconocida
+        flujoDesconocido = flujoEntreHierro-flujoconocido
+        Hdesconocido = sacarH(flujoDesconocido, SL, datosMu, factorApilado)
+        corrienteDesconocida = ((Fmmcentro+Hdesconocido*Ldesconocido)
+                                / Ndesconocido)
+        # print('Corriente calculada')
+        # print(corrienteDesconocida)
+        # print('flujo de bobina calculada')
+        # print(flujoDesconocido)
+        # print('flujo de bobina conocida')
+        # print(flujoconocido)
+        diccResultados = {Iconocida: flujoconocido,
+                          Idesconocida: [corrienteDesconocida,
+                                         flujoDesconocido]}
+        return diccResultados
 
 
-        #Sacar datos de la bobina con I conocido
-        Hconocido= (Nconocido*corrienteConocida-Fmmcentro)/(Lconocido)
-        print('H1')
-        print(Hconocido)
-        flujoconocido=sacarFlujo(Hconocido,SL,datosMu,factorApilado)
+def sacarH(flujoE, SC, datosMu, factorApilado=1):
+    # Saco B3 realmente
+    datos = datosMu[0]
+    B = flujoE/(factorApilado*SC)
 
-        #Sacar datos de la bobina con I desconocida
-        flujoDesconocido=flujoEntreHierro-flujoconocido
-        Hdesconocido= sacarH(flujoDesconocido,SL, datosMu, factorApilado)
-        corrienteDesconocida=(Fmmcentro+Hdesconocido*Ldesconocido)/Ndesconocido
-        print('Corriente calculada')
-        print(corrienteDesconocida)
-        print('flujo de bobina calculada')
-        print(flujoDesconocido)
-        print('flujo de bobina conocida')
-        print(flujoconocido)
-        return {Iconocida: flujoconocido, Idesconocida:[corrienteDesconocida, flujoDesconocido]}
-
-
-    #
-    
-    #
-    
-      #  H3=sacarH(flujoE,factorApilado,SC, tipo,a,b)
-        
-    
-    
-
-
-
-def sacarH(flujoE,SC, datosMu,factorApilado=1):
-    #Saco B3 realmente
-    datos=datosMu[0]
-    B=flujoE/(factorApilado*SC)
-    
-    if datosMu[1]=='ecuacion':
-        a=datosMu[0]['a']
-        b=datosMu[0]['b']
-        if (a-b*B)==0:
-            H=1
+    if datosMu[1] == 'ecuacion':
+        a = datosMu[0]['a']
+        b = datosMu[0]['b']
+        if (a-b*B) == 0:
+            H = 1
             st.write('Hay un problema con la fórmula')
         else:
-            H= abs(B)/(a-b*abs(B))
+            H = abs(B)/(a-b*abs(B))
     else:
-        menorB=0
-        mayorB=0
-        menorH=0
-        mayorH=0
+        menorB = 0
+        mayorB = 0
+        menorH = 0
+        mayorH = 0
         b_array = datos['B (T)'].to_numpy()
         h_array = datos['H (Av/m)'].to_numpy()
-        b_array,h_array= bubble_sort(b_array,h_array)
+        b_array, h_array = bubble_sort(b_array, h_array)
         print(h_array)
         print(b_array)
-        if B<b_array[0]:
-            menorB=b_array[0]
-            menorH=h_array[0]
-            mayorB=b_array[1]
-            mayorH=h_array[1]
-        elif B>b_array[len(b_array)-1]:
-            menorB=b_array[len(b_array)-2]
-            menorH=h_array[len(b_array)-2]
-            mayorB=b_array[len(b_array)-1]
-            mayorH=h_array[len(b_array)-1]
+        if B < b_array[0]:
+            menorB = b_array[0]
+            menorH = h_array[0]
+            mayorB = b_array[1]
+            mayorH = h_array[1]
+        elif B > b_array[len(b_array)-1]:
+            menorB = b_array[len(b_array)-2]
+            menorH = h_array[len(b_array)-2]
+            mayorB = b_array[len(b_array)-1]
+            mayorH = h_array[len(b_array)-1]
         else:
             for i in range(len(b_array)):
-                if b_array[i]<abs(B):
-                    menorB=b_array[i]
-                    menorH=h_array[i]
+                if b_array[i] < abs(B):
+                    menorB = b_array[i]
+                    menorH = h_array[i]
 
-                if b_array[i]>abs(B):
-                    mayorB=b_array[i]
-                    mayorH=h_array[i]
+                if b_array[i] > abs(B):
+                    mayorB = b_array[i]
+                    mayorH = h_array[i]
                     break
         H = menorH + (B - menorB) * (mayorH - menorH) / (mayorB - menorB)
-    print(menorB)
-    print(mayorB)
+        print(menorB)
+        print(mayorB)
     print(B)
     print(H)
     return H
 
 
-
-
-
-def mostrarResultado(resultados, dado, peticion):
+def mostrarResultado(diccResultados, parametrosEspecificos):
     # De momento no tenemos el formato del resultado.
     st.header("Resultados del cálculo")
-    if resultados[peticion]<0:
-        corrienteResult=str(abs(float(resultados[peticion])))+' Hacia la izquierda'
+    corrienteResult = parametrosEspecificos['variableBuscada']
+    if parametrosEspecificos['sentido'] == -1:
+        sentido = 'Hacia la izquierda'
     else:
-        corrienteResult=str(abs(float(resultados[peticion])))+' Hacia la derecha'
-    
-    st.metric("Corriente pedida (A)", corrienteResult)
+        sentido = 'Hacia la derecha'
+
+    mensajeResultado = str(corrienteResult) + sentido
+
+    """
+    if resultados[peticion] < 0:
+        corrienteResult = str(abs(float(resultados[peticion])))+' Hacia la izquierda'
+    else:
+        corrienteResult = str(abs(float(resultados[peticion])))+' Hacia la derecha'
+    """
+    st.metric("Corriente pedida (A)", mensajeResultado)
+
 
 def bubble_sort(arr, otro):
-
     # Outer loop to iterate through the list n times
     for n in range(len(arr) - 1, 0, -1):
 
@@ -361,47 +361,48 @@ def bubble_sort(arr, otro):
             if arr[i] > arr[i + 1]:
 
                 # Swap elements if they are in the wrong order
-                swapped = True
+                # swapped = True
                 arr[i], arr[i + 1] = arr[i + 1], arr[i]
                 otro[i], otro[i + 1] = otro[i + 1], otro[i]
     return arr, otro
 
-def sacarFlujo(H,SL, datosMu,factorApilado=1):
-    #Saco B3 realmente
-    datos=datosMu[0]
-    
-    if datosMu[1]=='ecuacion':
-        a=datosMu[0]['a']
-        b=datosMu[0]['b']
-        if (1+b*H)==0:
-            H=1
+
+def sacarFlujo(H, SL, datosMu, factorApilado=1):
+    # Saco B3 realmente
+    datos = datosMu[0]
+
+    if datosMu[1] == 'ecuacion':
+        a = datosMu[0]['a']
+        b = datosMu[0]['b']
+        if (1+b*H) == 0:
+            H = 1
             st.write('Hay un problema con la fórmula')
         else:
             B = a*H/(1+b*H)
     else:
-        menorB=0
-        mayorB=0
-        menorH=0
-        mayorH=0
+        menorB = 0
+        mayorB = 0
+        menorH = 0
+        mayorH = 0
         b_array = datos['B (T)'].to_numpy()
         h_array = datos['H (Av/m)'].to_numpy()
-        b_array,h_array= bubble_sort(b_array,h_array)
+        b_array, h_array = bubble_sort(b_array, h_array)
         print(h_array)
         print(b_array)
         for i in range(len(b_array)):
-            if h_array[i]<abs(H):
-                menorB=b_array[i]
-                menorH=h_array[i]
+            if h_array[i] < abs(H):
+                menorB = b_array[i]
+                menorH = h_array[i]
 
-            if h_array[i]>abs(H):
-                mayorB=b_array[i]
-                mayorH=h_array[i]
+            if h_array[i] > abs(H):
+                mayorB = b_array[i]
+                mayorH = h_array[i]
                 break
-        B= menorB + (H - menorH) * (mayorB - menorB) / (mayorH - menorH)
+        B = menorB + (H - menorH) * (mayorB - menorB) / (mayorH - menorH)
     print(B)
     print(H)
-    #Lo estaba dividiendo por error
-    flujo=B*(SL*factorApilado)
+    # Lo estaba dividiendo por error
+    flujo = B*(SL*factorApilado)
     print('flujo')
     print(flujo)
     return flujo
