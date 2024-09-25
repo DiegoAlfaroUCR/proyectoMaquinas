@@ -331,8 +331,9 @@ def sacarH(flujoE,SC, datosMu,factorApilado=1):
                     mayorH=h_array[i]
                     break
         H = menorH + (B - menorB) * (mayorH - menorH) / (mayorB - menorB)
-    print(menorB)
-    print(mayorB)
+        print(menorB)
+        print(mayorB)
+
     print(B)
     print(H)
     return H
