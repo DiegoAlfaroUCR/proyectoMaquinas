@@ -6,7 +6,7 @@ import time
 # Se busca si se tienen todos los paquetes
 
 faltanPaquetes = False
-listaPaquetes = ['streamlit', 'keyboard', 'PIL']
+listaPaquetes = ['streamlit', 'pynput', 'PIL']
 
 for paquete in listaPaquetes:
     if importlib.util.find_spec(paquete) is None:

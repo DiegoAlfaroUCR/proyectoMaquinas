@@ -13,28 +13,28 @@ def getInputsGenerales():
     col1, col2 = st.columns(2)
     with col1:
         vueltas1 = st.number_input("Número de vueltas de bobina 1",
-                                   min_value=1, step=1)
+                                   min_value=1, step=1, value=100)
         vueltas2 = st.number_input("Número de vueltas de bobina 2",
-                                   min_value=1, step=1)
+                                   min_value=1, step=1, value=50)
         SL = st.number_input("Área transversal SL (m)", min_value=minNoCero,
-                             value=1.00, format="%.5f")
+                             value=0.01, format="%.5f")
         SC = st.number_input("Área transversal SC (m)", min_value=minNoCero,
-                             value=1.00, format="%.5f")
+                             value=0.02, format="%.5f")
 
     with col2:
         A = st.number_input("Alto del circuito A (m)", min_value=minNoCero,
-                            value=1.00, format="%.5f")
+                            value=0.3, format="%.5f")
         L1 = st.number_input("Longitud L1 (m)", min_value=minNoCero,
-                             value=1.00, format="%.5f")
+                             value=0.4, format="%.5f")
         L2 = st.number_input("Longitud L2 (m)", min_value=minNoCero,
-                             value=1.00, format="%.5f")
+                             value=0.4, format="%.5f")
         # Cambie el nombre de L3 al LE,
         # que lo otro es sólo la altura a la que empieza el entre hierro
         LE = st.number_input("Altura media del entrehierro LE (m)",
-                             value=1.00, min_value=0.0, format="%.5f")
+                             value=0.002, min_value=0.0, format="%.5f")
 
     stringFP = "Factor de apilado de las láminas del núcleo"
-    factorApilado = st.number_input(stringFP, value=1.00,
+    factorApilado = st.number_input(stringFP, value=0.97,
                                     min_value=minNoCero,
                                     max_value=1.0,
                                     format="%.5f")
@@ -340,14 +340,14 @@ def mostrarResultado(diccResultados, parametrosEspecificos):
 
     # Mensaje para flujo por bobinas
     if corrienteBuscada == 'Corriente 1':
-        flujo1 = diccResultados['Corriente 1'][1]
-        flujo2 = diccResultados['Corriente 2']
+        flujo1 = str(round(diccResultados['Corriente 1'][1], 4))
+        flujo2 = str(round(diccResultados['Corriente 2'], 4))
     else:
-        flujo1 = diccResultados['Corriente 1']
-        flujo2 = diccResultados['Corriente 2'][1]
+        flujo1 = str(round(diccResultados['Corriente 1'], 4))
+        flujo2 = str(round(diccResultados['Corriente 2'][1], 4))
 
-    st.metric('Flujo por Bobina 1', str(flujo1) + ' Wb')
-    st.metric('Flujo por Bobina 2', str(flujo2) + ' Wb')
+    st.metric('Flujo por Bobina 1', flujo1 + ' Wb')
+    st.metric('Flujo por Bobina 2', flujo2 + ' Wb')
 
     # Mensaje para corriente buscada
     magnitudCorrienteBuscada = diccResultados[corrienteBuscada][0]
