@@ -20,6 +20,15 @@ def getInputsGenerales():
                              value=0.01, format="%.5f")
         SC = st.number_input("Área transversal SC (m)", min_value=minNoCero,
                              value=0.02, format="%.5f")
+        dispersion = st.number_input('Coeficiente de dispersión',
+                                     value=0.0,
+                                     min_value=0.0,
+                                     max_value=1.0,
+                                     format="%.5f")
+        seleccionPorcentaje = st.selectbox(
+            'Porcentaje de deformación' +
+            'del área en el entrehierro',
+            ['Automático', 'Porcentaje'])
 
     with col2:
         A = st.number_input("Alto del circuito A (m)", min_value=minNoCero,
@@ -33,24 +42,21 @@ def getInputsGenerales():
         LE = st.number_input("Altura media del entrehierro LE (m)",
                              value=0.002, min_value=0.0, format="%.5f")
 
-    stringFP = "Factor de apilado de las láminas del núcleo"
-    factorApilado = st.number_input(stringFP, value=0.97,
-                                    min_value=minNoCero,
-                                    max_value=1.0,
-                                    format="%.5f")
+        stringFP = "Factor de apilado de las láminas del núcleo"
+        factorApilado = st.number_input(stringFP, value=0.97,
+                                        min_value=minNoCero,
+                                        max_value=1.0,
+                                        format="%.5f")
 
-    seleccionPorcentaje = st.selectbox('Indique porcentaje de deformación' +
-                                       'del área en el entrehierro (%)',
-                                       ['Automático', 'Porcentaje'])
-
-    if seleccionPorcentaje == 'Porcentaje':
-        porcentajeArea = st.number_input('Coloque el dato como un porcentaje',
-                                         value=50.00,
-                                         min_value=0.0,
-                                         max_value=100.0,
-                                         format="%.5f")
-    else:
-        porcentajeArea = 'automatico'
+        strPorcentaje = 'Coloque el dato como un porcentaje'
+        if seleccionPorcentaje == 'Porcentaje':
+            porcentajeArea = st.number_input(strPorcentaje,
+                                             value=50.00,
+                                             min_value=0.0,
+                                             max_value=100.0,
+                                             format="%.5f")
+        else:
+            porcentajeArea = 'automatico'
 
     seleccionMu = st.selectbox('Escoja una forma de ingresar Mu',
                                ['Por tabla', 'Por ecuación'])
@@ -85,7 +91,8 @@ def getInputsGenerales():
         'datosMu': datosMu,
         'flujoEntreHierro': flujoEntreHierro,
         'sentidoEntreHierro': sentidoW,
-        'porcentajeArea': porcentajeArea
+        'porcentajeArea': porcentajeArea,
+        'dispersion': dispersion
     }
 
     return parametrosGenerales

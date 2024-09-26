@@ -53,6 +53,7 @@ else:
         # mostrarResultado(parametrosEspecificos)
         st.write(parametrosGenerales)
         st.write(parametrosEspecificos)
+        st.write(resultados)
         if st.button('Calcular'):
             resultados = calculadora(parametrosGenerales,
                                      parametrosEspecificos)

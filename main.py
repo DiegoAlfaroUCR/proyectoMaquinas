@@ -8,6 +8,9 @@ import time
 faltanPaquetes = False
 listaPaquetes = ['streamlit', 'pynput', 'PIL']
 
+print('Para usar este programa requiere tener instalado un navegador web' +
+      ' . Se recomienda Firefox.')
+
 for paquete in listaPaquetes:
     if importlib.util.find_spec(paquete) is None:
         faltanPaquetes = True
@@ -51,6 +54,6 @@ if not faltanPaquetes:
 else:
     print('\nNo tiene las librerías requeridas instaladas. ' +
           'Para usar el programa, debe instalarlas con el comando:\n' +
-          'pip install streamlit keyboard Pillow', end='')
+          'pip install streamlit pynput Pillow')
 
     # print(*listaPaquetes, end='\n\n')
