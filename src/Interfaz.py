@@ -26,7 +26,7 @@ st.subheader("Diego Alfaro Segura (C20259)," +
 st.sidebar.write(':blue[Instrucciones de uso: ]\n' +
                  'Ingrese los datos pedidos deacuerdo a las unidades ' +
                  'indicadas y a las magnitudes que corresponden en el' +
-                 ' diagrama. Finalmente, presione \'Calcular\' \n'
+                 ' diagrama. Finalmente, presione \'Calcular\'. \n'
                  )
 st.sidebar.write('El circuito asume que las corrientes hacia la derecha' +
                  ' en las bobinas generan flujo para arriba.\n' +
@@ -34,7 +34,8 @@ st.sidebar.write('El circuito asume que las corrientes hacia la derecha' +
                  ' flujo hacia bajo.')
 
 st.sidebar.write('Asegúrese de darle enter al ingresar los valores, ' +
-                 'sino queda guardado el último usado.')
+                 'sino queda guardado el último usado.' +
+                 '\n:red[Lea el Readme para más información.]')
 
 st.sidebar.write('Para cerrar la calculadora porfavor usar este botón, ' +
                  'no cerrar la pestaña pues tendrá que cerrar la terminal' +

@@ -11,7 +11,7 @@ faltanPaquetes = False
 listaPaquetes = ['streamlit', 'pynput', 'PIL']
 
 print('Para usar este programa requiere tener instalado un navegador web' +
-      ' . Se recomienda Firefox.')
+      ' . Se recomienda Firefox. Lea el Readme para mas información.')
 
 for paquete in listaPaquetes:
     if importlib.util.find_spec(paquete) is None:
