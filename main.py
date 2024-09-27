@@ -55,5 +55,3 @@ else:
     print('\nNo tiene las librerías requeridas instaladas. ' +
           'Para usar el programa, debe instalarlas con el comando:\n' +
           'pip install streamlit pynput Pillow')
-
-    # print(*listaPaquetes, end='\n\n')
