@@ -1,4 +1,5 @@
 # Versión de python: 3.12.1
+# Diego Alfaro Segura (C20259), Ismael José Alvarado Pérez (C20366)
 
 import streamlit as st
 import os

@@ -1,4 +1,5 @@
 # Versión de python: 3.12.1
+# Diego Alfaro Segura (C20259), Ismael José Alvarado Pérez (C20366)
 
 # Funciones de uso general
 
@@ -82,7 +83,7 @@ def getInputsGenerales():
     if seleccionMu == 'Por tabla':
         datosMu = tablaMu()
     else:
-        datosMu = ecuacionMu(SC,factorApilado,flujoEntreHierro)
+        datosMu = ecuacionMu(SC, factorApilado, flujoEntreHierro)
     parametrosGenerales = {
         'vueltas1': vueltas1,
         'vueltas2': vueltas2,
@@ -196,7 +197,7 @@ def tablaMu():
     return [st.session_state.df, 'dataFrame']
 
 
-def ecuacionMu(SC,factorApilado,flujoE):
+def ecuacionMu(SC, factorApilado, flujoE):
 
     st.write('Ingrese las variables \'a\' y \'b\' ' +
              'correspondientes a la ecuación: B = aH/(1+bH)')
@@ -234,7 +235,7 @@ def calculadora(generales, especificos):
     LE = float(generales['LE'])
     datosMu = generales['datosMu']
     sentidoW = generales['sentidoEntreHierro']
-    dispersion=generales['dispersion']
+    dispersion = generales['dispersion']
     flujoEntreHierro = float(generales['flujoEntreHierro'])*(1+dispersion)*sentidoW
     porcentajeArea = generales['porcentajeArea']
     if porcentajeArea == 'automatico':
@@ -242,7 +243,6 @@ def calculadora(generales, especificos):
     else:
         AreaEntrehierro = SC*(1+float(porcentajeArea)/100)
 
-    
     # Valores especificos
     Iconocida = especificos['variableDada']
     magnitud = especificos['magnitud']
@@ -251,16 +251,9 @@ def calculadora(generales, especificos):
     H3 = sacarH(flujoEntreHierro, SC, datosMu, factorApilado)
     # Sacar datos del centro
     Fmmcentro = flujoEntreHierro*LE/(mu*AreaEntrehierro) + H3*(A-LE)
-    # x = flujoEntreHierro*LE/(mu*AreaEntrehierro)
-    #print(H3)
-    # print(AreaEntrehierro)
-    # print(mu)
-    #print('Fmm')
-    #print(Fmmcentro)
-    # print(H3*(A-LE))
+
     # Identificar los datos conocidos
     corrienteConocida = magnitud*sentido
-    
 
     if Iconocida == 'Corriente 1':
         Idesconocida = 'Corriente 2'
@@ -287,33 +280,28 @@ def calculadora(generales, especificos):
     Hdesconocido = sacarH(flujoDesconocido, SL, datosMu, factorApilado)
     corrienteDesconocida = ((Fmmcentro+Hdesconocido*Ldesconocido)
                             / Ndesconocido)
-    # print('Corriente calculada')
-    # print(corrienteDesconocida)
-    # print('flujo de bobina calculada')
-    # print(flujoDesconocido)
-    # print('flujo de bobina conocida')
-    # print(flujoconocido)
+
     diccResultados = {Iconocida: flujoconocido,
                       Idesconocida: [corrienteDesconocida,
                                      flujoDesconocido]}
     return diccResultados
 
 
-def sacarH(flujoE,SC, datosMu,factorApilado=1):
-    #Saco B3 realmente
-    datos=datosMu[0]
-    B=flujoE/(factorApilado*SC)
-    
+def sacarH(flujoE, SC, datosMu, factorApilado=1):
+    # Saco B3 realmente
+    datos = datosMu[0]
+    B = flujoE/(factorApilado*SC)
+
     if datosMu[1]=='ecuacion':
-        a=datosMu[0]['a']
-        b=datosMu[0]['b']
-        if (a-b*abs(B))==0:
-            H=1
+        a = datosMu[0]['a']
+        b = datosMu[0]['b']
+        if (a-b*abs(B)) == 0:
+            H = 1
             st.write('Hay un problema con la fórmula, el cálculo mostrado es incorrecto')
         else:
-            H= abs(B)/(a-b*abs(B))
-    elif B==0:
-        H=0
+            H = abs(B)/(a-b*abs(B))
+    elif B == 0:
+        H = 0
     elif datosMu[1]=='error':
         H=0
     else:
