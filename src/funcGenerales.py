@@ -341,7 +341,7 @@ def sacarH(flujoE, SC, datosMu, factorApilado=1):
 
 
 def mostrarResultado(diccResultados, parametrosEspecificos):
-    st.header("Resultados del cálculo")
+    st.header(":blue[Resultados del cálculo]")
 
     corrienteBuscada = parametrosEspecificos['variableBuscada']
 
