@@ -28,8 +28,13 @@ st.sidebar.write(':blue[Instrucciones de uso: ]\n' +
                  'indicadas y a las magnitudes que corresponden en el' +
                  ' diagrama. Finalmente, presione \'Calcular\' \n'
                  )
-st.sidebar.write('El circuito asume que las corrientes hacia la derecha en las bobinas generan flujo para arriba.\n'+
-                 'Asímismo, corrientes para la izquierda generan flujo hacia bajo.')
+st.sidebar.write('El circuito asume que las corrientes hacia la derecha' +
+                 ' en las bobinas generan flujo para arriba.\n' +
+                 'Asímismo, corrientes para la izquierda generan' +
+                 ' flujo hacia bajo.')
+
+st.sidebar.write('Asegúrese de darle enter al ingresar los valores, ' +
+                 'sino queda guardado el último usado.')
 
 st.sidebar.write('Para cerrar la calculadora porfavor usar este botón, ' +
                  'no cerrar la pestaña pues tendrá que cerrar la terminal' +
@@ -55,13 +60,7 @@ else:
     # Botón de calcular
     resultados = calculadora(parametrosGenerales, parametrosEspecificos)
     if parametrosGenerales['datosMu'][1] != 'error':
-        # mostrarResultado(parametrosEspecificos)
-        #st.write(parametrosGenerales)
-        #st.write(parametrosEspecificos)
-        #st.write(resultados)
         if st.button('Calcular'):
             resultados = calculadora(parametrosGenerales,
-                                        parametrosEspecificos)
+                                     parametrosEspecificos)
             mostrarResultado(resultados, parametrosEspecificos)
-    
-
