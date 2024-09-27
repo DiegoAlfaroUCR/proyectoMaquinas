@@ -26,7 +26,12 @@ st.sidebar.write(':blue[Instrucciones de uso: ]\n' +
                  'indicadas y a las magnitudes que corresponden en el' +
                  ' diagrama. Finalmente, presione \'Calcular\'')
 
-st.sidebar.write('Para cerrar la calculadora porfavor usar este botón, ' +
+st.sidebar.write('Asegúrese de darle enter al ingresar los valores, ' +
+                 'es decir que en el input no diga \'Presione enter ' +
+                 'para ingresar\'. Sino puede que el cálculo use el valor' +
+                 ' :red[anterior].')
+
+st.sidebar.write('!Para cerrar la calculadora porfavor usar este botón, ' +
                  'no cerrar la pestaña pues tendrá que cerrar la terminal' +
                  ' con CTRL + C, y en windows podría tardar unos segundos!')
 if st.sidebar.button("Cerrar calculadora."):
