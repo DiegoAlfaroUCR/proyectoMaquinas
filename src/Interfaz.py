@@ -1,3 +1,5 @@
+# Versión de python: 3.12.1
+
 import streamlit as st
 import os
 import signal

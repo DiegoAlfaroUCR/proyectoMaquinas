@@ -1,0 +1,8 @@
+Instrucciones de uso: Ingrese los datos pedidos deacuerdo a las unidades indicadas y a las magnitudes que corresponden en el diagrama. 
+Finalmente, presione 'Calcular'
+
+Asegúrese de darle enter al ingresar los valores, es decir que en el input no diga 'Presione enter para ingresar'. 
+Sino puede que el cálculo use el valor anterior.
+
+!Para cerrar la calculadora porfavor usar botón 'Cerrar calculadora.' en la interfaz,
+no cerrar la pestaña pues tendrá que cerrar la terminal con CTRL + C, y en windows podría tardar unos segundos!

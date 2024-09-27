@@ -1,3 +1,5 @@
+# Versión de python: 3.12.1
+
 # Funciones de uso general
 
 import streamlit as st

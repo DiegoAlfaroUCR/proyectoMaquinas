@@ -1,3 +1,5 @@
+# Versión de python: 3.12.1
+
 import subprocess
 import importlib.util
 import threading
