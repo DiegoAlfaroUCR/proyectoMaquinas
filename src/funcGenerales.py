@@ -72,6 +72,7 @@ def getInputsGenerales():
         flujoEntreHierro = st.number_input("Flujo [Wb]",
                                            min_value=0.0, format="%.5f")
     with col2:
+        opcionesSentido = {'Hacia arriba': -1, 'Hacia abajo': 1}
         # Create a select box for choosing units
         sentidoW = st.selectbox(
             "Sentido",
@@ -90,7 +91,7 @@ def getInputsGenerales():
         'LE': LE,
         'datosMu': datosMu,
         'flujoEntreHierro': flujoEntreHierro,
-        'sentidoEntreHierro': sentidoW,
+        'sentidoEntreHierro': opcionesSentido[sentidoW],
         'porcentajeArea': porcentajeArea,
         'dispersion': dispersion
     }
@@ -223,15 +224,16 @@ def calculadora(generales, especificos):
     L2 = float(generales['L2'])
     LE = float(generales['LE'])
     datosMu = generales['datosMu']
-    flujoEntreHierro = float(generales['flujoEntreHierro'])
-    # sentidoW = generales['sentidoEntreHierro']
+    sentidoW = generales['sentidoEntreHierro']
+    dispersion=generales['dispersion']
+    flujoEntreHierro = float(generales['flujoEntreHierro'])*(1+dispersion)*sentidoW
     porcentajeArea = generales['porcentajeArea']
     if porcentajeArea == 'automatico':
         AreaEntrehierro = (np.sqrt(SC)+LE)**2
     else:
         AreaEntrehierro = SC*(1+float(porcentajeArea)/100)
 
-    """No he puesto como afecta la dirección"""
+    
     # Valores especificos
     Iconocida = especificos['variableDada']
     magnitud = especificos['magnitud']
@@ -241,16 +243,15 @@ def calculadora(generales, especificos):
     # Sacar datos del centro
     Fmmcentro = flujoEntreHierro*LE/(mu*AreaEntrehierro) + H3*(A-LE)
     # x = flujoEntreHierro*LE/(mu*AreaEntrehierro)
-    # print(x)
+    #print(H3)
     # print(AreaEntrehierro)
     # print(mu)
-    # print('Fmm')
-    # print(Fmmcentro)
+    #print('Fmm')
+    #print(Fmmcentro)
     # print(H3*(A-LE))
     # Identificar los datos conocidos
-    corrienteConocida = magnitud
-    if sentido == 'Hacia la izquierda':
-        corrienteConocida = -magnitud
+    corrienteConocida = magnitud*sentido
+    
 
     if Iconocida == 'Corriente 1':
         Idesconocida = 'Corriente 2'
@@ -289,54 +290,59 @@ def calculadora(generales, especificos):
     return diccResultados
 
 
-def sacarH(flujoE, SC, datosMu, factorApilado=1):
-    # Saco B3 realmente
-    datos = datosMu[0]
-    B = flujoE/(factorApilado*SC)
-
-    if datosMu[1] == 'ecuacion':
-        a = datosMu[0]['a']
-        b = datosMu[0]['b']
-        if (a-b*B) == 0:
-            H = 1
+def sacarH(flujoE,SC, datosMu,factorApilado=1):
+    #Saco B3 realmente
+    datos=datosMu[0]
+    B=flujoE/(factorApilado*SC)
+    
+    if datosMu[1]=='ecuacion':
+        a=datosMu[0]['a']
+        b=datosMu[0]['b']
+        if (a-b*B)==0:
+            H=1
             st.write('Hay un problema con la fórmula')
         else:
-            H = abs(B)/(a-b*abs(B))
+            H= abs(B)/(a-b*abs(B))
+    elif B==0:
+        H=0
     else:
-        menorB = 0
-        mayorB = 0
-        menorH = 0
-        mayorH = 0
+        menorB=0
+        mayorB=0
+        menorH=0
+        mayorH=0
         b_array = datos['B (T)'].to_numpy()
         h_array = datos['H (Av/m)'].to_numpy()
-        b_array, h_array = bubble_sort(b_array, h_array)
-        # print(h_array)
-        # print(b_array)
-        if B < b_array[0]:
-            menorB = b_array[0]
-            menorH = h_array[0]
-            mayorB = b_array[1]
-            mayorH = h_array[1]
-        elif B > b_array[len(b_array)-1]:
-            menorB = b_array[len(b_array)-2]
-            menorH = h_array[len(b_array)-2]
-            mayorB = b_array[len(b_array)-1]
-            mayorH = h_array[len(b_array)-1]
+        b_array,h_array= bubble_sort(b_array,h_array)
+        #print(h_array)
+        #print(b_array)
+        if abs(B)<b_array[0]:
+            menorB=b_array[0]
+            menorH=h_array[0]
+            mayorB=b_array[1]
+            mayorH=h_array[1]
+        elif abs(B)>b_array[len(b_array)-1]:
+            menorB=b_array[len(b_array)-2]
+            menorH=h_array[len(b_array)-2]
+            mayorB=b_array[len(b_array)-1]
+            mayorH=h_array[len(b_array)-1]
         else:
             for i in range(len(b_array)):
-                if b_array[i] < abs(B):
-                    menorB = b_array[i]
-                    menorH = h_array[i]
+                if b_array[i]<abs(B):
+                    menorB=b_array[i]
+                    menorH=h_array[i]
 
-                if b_array[i] > abs(B):
-                    mayorB = b_array[i]
-                    mayorH = h_array[i]
+                if b_array[i]>abs(B):
+                    mayorB=b_array[i]
+                    mayorH=h_array[i]
                     break
-        H = menorH + (B - menorB) * (mayorH - menorH) / (mayorB - menorB)
-        # print(menorB)
-        # print(mayorB)
-    # print(B)
-    # print(H)
+        H = menorH + (abs(B) - menorB) * (mayorH - menorH) / (mayorB - menorB)
+        if B<0:
+            H=-H
+        #print(menorB)
+        #print(mayorB)
+
+    #print(B)
+    #print(H)
     return H
 
 
@@ -347,14 +353,26 @@ def mostrarResultado(diccResultados, parametrosEspecificos):
 
     # Mensaje para flujo por bobinas
     if corrienteBuscada == 'Corriente 1':
-        flujo1 = str(round(diccResultados['Corriente 1'][1], 4))
-        flujo2 = str(round(diccResultados['Corriente 2'], 4))
-    else:
-        flujo1 = str(round(diccResultados['Corriente 1'], 4))
-        flujo2 = str(round(diccResultados['Corriente 2'][1], 4))
+        f1=round(diccResultados['Corriente 1'][1], 4)
+        f2=round(diccResultados['Corriente 2'], 4)
 
-    st.metric('Flujo por Bobina 1', flujo1 + ' Wb')
-    st.metric('Flujo por Bobina 2', flujo2 + ' Wb')
+    else:
+        f1=round(diccResultados['Corriente 1'], 4)
+        f2=round(diccResultados['Corriente 2'][1], 4)
+    sentido1="Hacia Arriba"
+    sentido2="Hacia Arriba"
+    #print(f1)
+    #print(f2)
+    if f1<0:
+        f1=-f1
+        sentido1='Hacia Abajo'
+    if f2<0:
+        f2=-f2
+        sentido2='Hacia Abajo'   
+    flujo1 = str(f1)
+    flujo2 = str(f2)
+    st.metric('Flujo por Bobina 1', flujo1 + ' Wb   '+sentido1)
+    st.metric('Flujo por Bobina 2', flujo2 + ' Wb   '+sentido2)
 
     # Mensaje para corriente buscada
     magnitudCorrienteBuscada = diccResultados[corrienteBuscada][0]
@@ -366,7 +384,7 @@ def mostrarResultado(diccResultados, parametrosEspecificos):
 
     mensajeCorrienteBuscada = (corrienteBuscada + ' : ' +
                                str(abs(round(magnitudCorrienteBuscada, 3))) +
-                               ' A, ' + sentido)
+                               ' A   ' + sentido)
 
     st.metric("Corriente buscada", mensajeCorrienteBuscada)
 
@@ -398,6 +416,8 @@ def sacarFlujo(H, SL, datosMu, factorApilado=1):
             st.write('Hay un problema con la fórmula')
         else:
             B = a*H/(1+b*H)
+    elif H==0:
+        B=0
     else:
         menorB = 0
         mayorB = 0
@@ -408,20 +428,38 @@ def sacarFlujo(H, SL, datosMu, factorApilado=1):
         b_array, h_array = bubble_sort(b_array, h_array)
         # print(h_array)
         # print(b_array)
-        for i in range(len(b_array)):
-            if h_array[i] < abs(H):
-                menorB = b_array[i]
-                menorH = h_array[i]
+        if abs(H)<h_array[0]:
+            menorB=b_array[0]
+            menorH=h_array[0]
+            mayorB=b_array[1]
+            mayorH=h_array[1]
+        elif abs(H)>h_array[len(b_array)-1]:
+            menorB=b_array[len(b_array)-2]
+            menorH=h_array[len(b_array)-2]
+            mayorB=b_array[len(b_array)-1]
+            mayorH=h_array[len(b_array)-1]
+        else:
+            for i in range(len(b_array)):
+                if h_array[i] < abs(H):
+                    menorB = b_array[i]
+                    menorH = h_array[i]
 
-            if h_array[i] > abs(H):
-                mayorB = b_array[i]
-                mayorH = h_array[i]
-                break
-        B = menorB + (H - menorH) * (mayorB - menorB) / (mayorH - menorH)
-    # print(B)
-    # print(H)
+                if h_array[i] > abs(H):
+                    mayorB = b_array[i]
+                    mayorH = h_array[i]
+                    break
+
+        B = menorB + (abs(H) - menorH) * (mayorB - menorB) / (mayorH - menorH)
+        #print('menorH'+str(menorH))
+        #print('mH'+str(mayorH))
+        #print('menorB'+str(menorB))
+        #print('mB'+str(mayorB))
+    #print(B)
+    #print(H)
     # Lo estaba dividiendo por error
     flujo = B*(SL*factorApilado)
-    # print('flujo')
-    # print(flujo)
+    if H<0:
+            flujo=-flujo
+    #print('flujo')
+    #print(flujo)
     return flujo
