@@ -24,16 +24,14 @@ st.subheader("Diego Alfaro Segura (C20259)," +
 st.sidebar.write(':blue[Instrucciones de uso: ]\n' +
                  'Ingrese los datos pedidos deacuerdo a las unidades ' +
                  'indicadas y a las magnitudes que corresponden en el' +
-                 ' diagrama. Finalmente, presione \'Calcular\'')
+                 ' diagrama. Finalmente, presione \'Calcular\' \n'
+                 )
+st.sidebar.write('El circuito asume que las corrientes hacia la derecha en las bobinas generan flujo para arriba.\n'+
+                 'Asímismo, corrientes para la izquierda generan flujo hacia bajo.')
 
-st.sidebar.write('Asegúrese de darle enter al ingresar los valores, ' +
-                 'es decir que en el input no diga \'Presione enter ' +
-                 'para ingresar\'. Sino puede que el cálculo use el valor' +
-                 ' :red[anterior].')
-
-st.sidebar.write('!Para cerrar la calculadora porfavor usar este botón, ' +
+st.sidebar.write('Para cerrar la calculadora porfavor usar este botón, ' +
                  'no cerrar la pestaña pues tendrá que cerrar la terminal' +
-                 ' con CTRL + C, y en windows podría tardar unos segundos!')
+                 ' con CTRL + C ¡En windows podría tardar unos segundos!')
 if st.sidebar.button("Cerrar calculadora."):
     time.sleep(0.0005)
     with keyboard.pressed(Key.ctrl):  # This will hold down the 'ctrl' key
@@ -55,7 +53,13 @@ else:
     # Botón de calcular
     resultados = calculadora(parametrosGenerales, parametrosEspecificos)
     if parametrosGenerales['datosMu'][1] != 'error':
+        # mostrarResultado(parametrosEspecificos)
+        #st.write(parametrosGenerales)
+        #st.write(parametrosEspecificos)
+        #st.write(resultados)
         if st.button('Calcular'):
             resultados = calculadora(parametrosGenerales,
-                                     parametrosEspecificos)
+                                        parametrosEspecificos)
             mostrarResultado(resultados, parametrosEspecificos)
+    
+
